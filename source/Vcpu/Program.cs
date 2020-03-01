@@ -10,7 +10,7 @@ namespace Vcpu
             var result = vcpu_program_assemble(source, out _inner, out var error);
             if (result != 0)
             {
-                throw new VcpuException(result, error);
+                throw new VcpuException(result, Utf8Marshal.PtrToString(error));
             }
         }
 
@@ -50,7 +50,7 @@ namespace Vcpu
 
 #pragma warning disable IDE1006 // Naming Styles
         [DllImport("vcpu_interop")]
-        internal static extern int vcpu_program_assemble(string source, out IntPtr program, out string error);
+        internal static extern int vcpu_program_assemble(string source, out IntPtr program, out IntPtr error);
 
         [DllImport("vcpu_interop")]
         internal static extern void vcpu_program_get_data(IntPtr program, out IntPtr data, out int data_len);
