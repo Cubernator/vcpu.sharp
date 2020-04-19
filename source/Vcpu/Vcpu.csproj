@@ -1,7 +1,24 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
+
+  <Target Name="RustBuild" BeforeTargets="IncludeDynamicResources">
+    <Exec Condition="$(Configuration) == Debug" WorkingDirectory="../../external/vcpu/vcpu-interop" Command="cargo build"/>
+    <Exec Condition="$(Configuration) == Release" WorkingDirectory="../../external/vcpu/vcpu-interop" Command="cargo build --release"/>
+  </Target>
+
+  <Target Name="IncludeDynamicResources" BeforeTargets="ResolveReferences">
+    <ItemGroup>
+      <Content Condition="$(Configuration) == Release" Include="../../external/vcpu/target/release/*.dll" Visible="False">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+
+      <Content Condition="$(Configuration) == Debug" Include="../../external/vcpu/target/debug/*.dll" Visible="False">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+    </ItemGroup>
+  </Target>
 
 </Project>

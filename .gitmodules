@@ -1,0 +1,3 @@
+[submodule "external/vcpu"]
+	path = external/vcpu
+	url = https://github.com/Cubernator/vcpu.git
