@@ -1,5 +1,3 @@
-#if !UNITY_EDITOR
-
 using Vcpu;
 using Xunit;
 
@@ -55,5 +53,3 @@ HALT";
         }
     }
 }
-
-#endif
