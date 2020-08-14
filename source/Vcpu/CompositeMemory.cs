@@ -16,13 +16,13 @@ namespace Vcpu
             => Validation.ValidateResult(vcpu_memory_comp_unmount(Inner, key));
 
 #pragma warning disable IDE1006 // Naming Styles
-        [DllImport("vcpu_interop")]
+        [DllImport(Constants.VcpuLib)]
         internal static extern IntPtr vcpu_memory_create_comp();
 
-        [DllImport("vcpu_interop")]
+        [DllImport(Constants.VcpuLib)]
         internal static extern int vcpu_memory_comp_mount(IntPtr memory, int address, string key, IntPtr fragment);
 
-        [DllImport("vcpu_interop")]
+        [DllImport(Constants.VcpuLib)]
         internal static extern int vcpu_memory_comp_unmount(IntPtr memory, string key);
 #pragma warning restore IDE1006 // Naming Styles
 

@@ -16,6 +16,10 @@ namespace Vcpu
             GC.SuppressFinalize(this);
         }
 
+        public void SetWord(int address, int value) => Validation.ValidateResult(vcpu_memory_set_word(Inner, address, value));
+        public void SetHalf(int address, short value) => Validation.ValidateResult(vcpu_memory_set_half(Inner, address, value));
+        public void SetByte(int address, byte value) => Validation.ValidateResult(vcpu_memory_set_byte(Inner, address, value));
+
         protected Memory(IntPtr inner)
         {
             Inner = inner;
@@ -33,16 +37,28 @@ namespace Vcpu
         }
 
 #pragma warning disable IDE1006 // Naming Styles
-        [DllImport("vcpu_interop")]
+        [DllImport(Constants.VcpuLib)]
         internal static extern int vcpu_memory_get_ptr(IntPtr memory, out IntPtr ptr, out int size);
 
-        [DllImport("vcpu_interop")]
+        [DllImport(Constants.VcpuLib)]
         internal static extern int vcpu_memory_read(IntPtr memory, IntPtr dest, int offset, int length);
 
-        [DllImport("vcpu_interop")]
+        [DllImport(Constants.VcpuLib)]
         internal static extern int vcpu_memory_write(IntPtr memory, IntPtr src, int offset, int length);
 
-        [DllImport("vcpu_interop")]
+        [DllImport(Constants.VcpuLib)]
+        internal static extern int vcpu_memory_set_word(IntPtr memory, int address, int value);
+
+        [DllImport(Constants.VcpuLib)]
+        internal static extern int vcpu_memory_set_half(IntPtr memory, int address, short value);
+
+        [DllImport(Constants.VcpuLib)]
+        internal static extern int vcpu_memory_set_byte(IntPtr memory, int address, byte value);
+
+        [DllImport(Constants.VcpuLib)]
+        internal static extern int vcpu_memory_resize(IntPtr memory, int size);
+
+        [DllImport(Constants.VcpuLib)]
         internal static extern void vcpu_memory_destroy(IntPtr memory);
 #pragma warning restore IDE1006 // Naming Styles
     }

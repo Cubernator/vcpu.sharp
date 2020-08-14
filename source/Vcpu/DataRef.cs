@@ -61,7 +61,7 @@ namespace Vcpu
         {
             var dest = new byte[length];
 
-            Read(offset, length, dest, length);
+            Read(offset, length, dest, 0);
 
             return dest;
         }
@@ -104,7 +104,7 @@ namespace Vcpu
         internal IntPtr Pointer { get; }
 
 #pragma warning disable IDE1006 // Naming Styles
-        [DllImport("vcpu_interop")]
+        [DllImport(Constants.VcpuLib)]
         internal static extern IntPtr vcpu_memcpy(IntPtr dst, IntPtr src, int length);
 #pragma warning restore IDE1006 // Naming Styles
     }

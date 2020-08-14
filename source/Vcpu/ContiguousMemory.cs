@@ -35,6 +35,8 @@ namespace Vcpu
             Validation.ValidateResult(vcpu_memory_write(Inner, src.Pointer + srcOffset, destOffset, length));
         }
 
+        public void Resize(int size) => Validation.ValidateResult(vcpu_memory_resize(Inner, size));
+
         protected ContiguousMemory(IntPtr inner) : base(inner)
         {
         }

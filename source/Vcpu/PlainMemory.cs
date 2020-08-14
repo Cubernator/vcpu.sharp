@@ -17,7 +17,7 @@ namespace Vcpu
         }
 
 #pragma warning disable IDE1006 // Naming Styles
-        [DllImport("vcpu_interop")]
+        [DllImport(Constants.VcpuLib)]
         internal static extern IntPtr vcpu_memory_create_plain(int size);
 #pragma warning restore IDE1006 // Naming Styles
     }

@@ -1,7 +1,7 @@
 using Vcpu;
 using Xunit;
 
-namespace Test.VcpuSharp
+namespace Test.Vcpu
 {
     public class ProgramTests
     {
@@ -38,7 +38,8 @@ HALT";
 
             processor.Run(program, memory);
 
-            Assert.Equal(0, processor.State);
+            Assert.NotNull(processor.ExitCode);
+            Assert.False(processor.ExitCode.Value.IsError);
         }
 
         [Fact]
