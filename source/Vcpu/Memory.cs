@@ -20,6 +20,22 @@ namespace Vcpu
         public void SetHalf(int address, short value) => Validation.ValidateResult(vcpu_memory_set_half(Inner, address, value));
         public void SetByte(int address, byte value) => Validation.ValidateResult(vcpu_memory_set_byte(Inner, address, value));
 
+        public int GetWord(int address)
+        {
+            Validation.ValidateResult(vcpu_memory_get_word(Inner, address, out var value));
+            return value;
+        }
+        public int GetHalf(int address)
+        {
+            Validation.ValidateResult(vcpu_memory_get_half(Inner, address, out var value));
+            return value;
+        }
+        public int GetByte(int address)
+        {
+            Validation.ValidateResult(vcpu_memory_get_byte(Inner, address, out var value));
+            return value;
+        }
+
         protected Memory(IntPtr inner)
         {
             Inner = inner;
@@ -54,6 +70,15 @@ namespace Vcpu
 
         [DllImport(Constants.VcpuLib)]
         internal static extern int vcpu_memory_set_byte(IntPtr memory, int address, byte value);
+
+        [DllImport(Constants.VcpuLib)]
+        internal static extern int vcpu_memory_get_word(IntPtr memory, int address, out int value);
+
+        [DllImport(Constants.VcpuLib)]
+        internal static extern int vcpu_memory_get_half(IntPtr memory, int address, out short value);
+
+        [DllImport(Constants.VcpuLib)]
+        internal static extern int vcpu_memory_get_byte(IntPtr memory, int address, out byte value);
 
         [DllImport(Constants.VcpuLib)]
         internal static extern int vcpu_memory_resize(IntPtr memory, int size);
