@@ -13,11 +13,11 @@ namespace Test.Vcpu
 .instructions
 HALT";
 
-            using var program = new Program(source);
+            using var executable = new Executable(source);
 
-            Assert.NotNull(program);
-            Assert.Equal(0, program.Data.Size);
-            Assert.Equal(4, program.Instructions.Size);
+            Assert.NotNull(executable);
+            Assert.Equal(0, executable.Data.Size);
+            Assert.Equal(4, executable.Instructions.Size);
         }
 
         [Fact]
@@ -28,15 +28,15 @@ HALT";
 .instructions
 HALT";
 
-            using var program = new Program(source);
+            using var executable = new Executable(source);
             using var processor = new Processor();
             using var memory = new PlainMemory(4);
 
-            Assert.NotNull(program);
+            Assert.NotNull(executable);
             Assert.NotNull(processor);
             Assert.NotNull(memory);
 
-            processor.Run(program, memory);
+            processor.Run(executable, memory);
 
             Assert.NotNull(processor.ExitCode);
             Assert.False(processor.ExitCode.Value.IsError);
@@ -49,7 +49,7 @@ HALT";
 
             var exception = Assert.Throws<VcpuException>(() =>
             {
-                using var program = new Program(source);
+                using var executable = new Executable(source);
             });
         }
     }

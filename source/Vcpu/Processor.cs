@@ -42,12 +42,12 @@ namespace Vcpu
         public void Tick(DataRef instructions, Memory memory)
             => Validation.ValidateResult(vcpu_processor_tick(_inner, instructions.Pointer, instructions.Size, memory.Inner));
 
-        public void Tick(Program program, Memory memory) => Tick(program.Instructions, memory);
+        public void Tick(Executable executable, Memory memory) => Tick(executable.Instructions, memory);
 
         public void Run(DataRef instructions, Memory memory)
             => Validation.ValidateResult(vcpu_processor_run(_inner, instructions.Pointer, instructions.Size, memory.Inner));
 
-        public void Run(Program program, Memory memory) => Run(program.Instructions, memory);
+        public void Run(Executable executable, Memory memory) => Run(executable.Instructions, memory);
 
         public void Reset() => vcpu_processor_reset(_inner);
 

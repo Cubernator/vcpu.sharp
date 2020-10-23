@@ -3,11 +3,11 @@ using System.Runtime.InteropServices;
 
 namespace Vcpu
 {
-    public class Program : IDisposable
+    public class Executable : IDisposable
     {
-        public Program(string source, int dataOffset = 0)
+        public Executable(string source, int dataOffset = 0)
         {
-            var result = vcpu_program_assemble(source, dataOffset, out _inner, out var sourceMap, out var error);
+            var result = vcpu_executable_assemble(source, dataOffset, out _inner, out var sourceMap, out var error);
             if (result != 0)
             {
                 throw new VcpuException(result, Utf8Marshal.PtrToString(error));
@@ -21,18 +21,18 @@ namespace Vcpu
             vcpu_source_map_destroy(sourceMap);
         }
 
-        ~Program()
+        ~Executable()
         {
             Dispose();
         }
 
-        public int DataOffset => vcpu_program_get_data_offset(_inner);
+        public int DataOffset => vcpu_executable_get_data_offset(_inner);
 
         public DataRef Data
         {
             get
             {
-                vcpu_program_get_data(_inner, out var data, out var dataLength);
+                vcpu_executable_get_data(_inner, out var data, out var dataLength);
                 return new DataRef(data, dataLength, true);
             }
         }
@@ -41,7 +41,7 @@ namespace Vcpu
         {
             get
             {
-                vcpu_program_get_instructions(_inner, out var instructions, out var instructionsLength);
+                vcpu_executable_get_instructions(_inner, out var instructions, out var instructionsLength);
                 return new DataRef(instructions, instructionsLength, true);
             }
         }
@@ -50,7 +50,7 @@ namespace Vcpu
         {
             if (_inner != IntPtr.Zero)
             {
-                vcpu_program_destroy(_inner);
+                vcpu_executable_destroy(_inner);
                 _inner = IntPtr.Zero;
             }
 
@@ -60,29 +60,27 @@ namespace Vcpu
         public SourceSpan GetInstructionSpan(int instructionIndex)
         {
             var mapIndex = instructionIndex * 2;
-            if (mapIndex >= _sourceMap.Length)
-            {
-                throw new ArgumentOutOfRangeException(nameof(instructionIndex));
-            }
 
-            return new SourceSpan(_sourceMap[mapIndex], _sourceMap[mapIndex + 1]);
+            return mapIndex < _sourceMap.Length
+                ? new SourceSpan(_sourceMap[mapIndex], _sourceMap[mapIndex + 1])
+                : throw new ArgumentOutOfRangeException(nameof(instructionIndex));
         }
 
 #pragma warning disable IDE1006 // Naming Styles
         [DllImport(Constants.VcpuLib)]
-        internal static extern int vcpu_program_assemble(string source, int data_offset, out IntPtr program, out IntPtr source_map, out IntPtr error);
+        internal static extern int vcpu_executable_assemble(string source, int data_offset, out IntPtr executable, out IntPtr source_map, out IntPtr error);
 
         [DllImport(Constants.VcpuLib)]
-        internal static extern void vcpu_program_get_data(IntPtr program, out IntPtr data, out int data_len);
+        internal static extern void vcpu_executable_get_data(IntPtr executable, out IntPtr data, out int data_len);
 
         [DllImport(Constants.VcpuLib)]
-        internal static extern void vcpu_program_get_instructions(IntPtr program, out IntPtr instr, out int instr_len);
+        internal static extern void vcpu_executable_get_instructions(IntPtr executable, out IntPtr instr, out int instr_len);
 
         [DllImport(Constants.VcpuLib)]
-        internal static extern int vcpu_program_get_data_offset(IntPtr program);
+        internal static extern int vcpu_executable_get_data_offset(IntPtr executable);
 
         [DllImport(Constants.VcpuLib)]
-        internal static extern void vcpu_program_destroy(IntPtr program);
+        internal static extern void vcpu_executable_destroy(IntPtr executable);
 
         [DllImport(Constants.VcpuLib)]
         internal static extern void vcpu_source_map_get_data(IntPtr source_map, out IntPtr data, out int data_len);
